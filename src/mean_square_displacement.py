@@ -21,8 +21,13 @@ def random_walk_finals(num_steps=1000, num_walks=1000):
     # 1. 使用np.zeros初始化数组
     # 2. 使用np.random.choice生成随机步长
     # 3. 使用np.sum计算总位移
-    pass
-
+   
+    x_finals=np.zeros(num_walks)
+    y_finals=np.zeros(num_walks)
+    for i in range(num_walks):
+        x_finals[i]=np.sum(np.random.choice([-1,1],num_steps))
+        y_finals[i]=np.sum(np.random.choice([-1,1],num_steps))
+    return (x_finals,y_finals)
 
 def calculate_mean_square_displacement():
     """计算不同步数下的均方位移
@@ -40,7 +45,15 @@ def calculate_mean_square_displacement():
     # 1. 使用random_walk_finals获取终点坐标
     # 2. 计算位移平方和
     # 3. 使用np.mean计算平均值
-    pass
+
+    steps=np.array([1000,2000,3000,4000])
+    msd=[]
+    for i in steps:
+        x_finals,y_finals=random_walk_finals(num_steps=i)
+        ds=x_finals**2+y_finals**2
+        msd.append(np.mean(ds))
+
+    return steps,np.array(msd)
 
 
 def analyze_step_dependence():
@@ -57,7 +70,11 @@ def analyze_step_dependence():
     # 1. 调用calculate_mean_square_displacement获取数据
     # 2. 使用最小二乘法拟合 msd = k * steps
     # 3. k = Σ(N·msd)/Σ(N²)
-    pass
+
+    steps,msd=calculate_mean_square_displacement()
+    msd=np.array(msd)
+    k=np.sum(steps*msd)/np.sum(steps**2)
+    return steps,msd,k
 
 
 if __name__ == "__main__":
