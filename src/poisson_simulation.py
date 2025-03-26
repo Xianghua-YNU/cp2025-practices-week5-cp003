@@ -9,15 +9,17 @@ def plot_poisson_pmf(lambda_param=8, max_l=20):
         lambda_param (float): 泊松分布参数λ
         max_l (int): 最大的l值
     """
-    l_values = np.arange(0, max_l + 1)
-    pmf_values = (np.exp(-lambda_param) * lambda_param**l_values) / factorial(l_values)
+    l_values = np.arange(max_l)
+    pmf = (lambda_param**l_values * np.exp(-lambda_param)) / factorial(l_values)
     
-    plt.bar(l_values, pmf_values, color='blue', alpha=0.7, label=f'λ={lambda_param}')
+    plt.figure(figsize=(10, 6))
+    plt.plot(l_values, pmf, 'bo-', label='Theoretical Distribution')
+    plt.title(f'Poisson Probability Mass Function (λ={lambda_param})')
     plt.xlabel('l')
-    plt.ylabel('P(l)')
-    plt.title('Poisson PMF')
-    plt.legend()
+    plt.ylabel('p(l)')
     plt.grid(True)
+    plt.legend()
+    return pmf
 
 def simulate_coin_flips(n_experiments=10000, n_flips=100, p_head=0.08):
     """模拟多组抛硬币实验
@@ -30,8 +32,12 @@ def simulate_coin_flips(n_experiments=10000, n_flips=100, p_head=0.08):
     返回:
         ndarray: 每组实验中正面朝上的次数
     """
-    results = np.random.binomial(n=n_flips, p=p_head, size=n_experiments)
-    return results
+    results = []  #记录硬币正面朝上的次数
+    for i in range(n_experiments):
+        coins = np.random.choice([0,1],n_flips, p=[1-p_head,p_head]) #抛硬币100次
+        results.append(coins.sum())
+
+    return np.array(results)
 
 def compare_simulation_theory(n_experiments=10000, lambda_param=8):
     """比较实验结果与理论分布
@@ -40,30 +46,29 @@ def compare_simulation_theory(n_experiments=10000, lambda_param=8):
         n_experiments (int): 实验组数
         lambda_param (float): 泊松分布参数λ
     """
-    # 实验结果
-    simulated_results = simulate_coin_flips(n_experiments=n_experiments, n_flips=100, p_head=lambda_param / 100)
-    unique, counts = np.unique(simulated_results, return_counts=True)
-    simulated_pmf = counts / n_experiments
-
-    # 理论分布
-    max_l = max(unique)
-    l_values = np.arange(0, max_l + 1)
-    theoretical_pmf = (np.exp(-lambda_param) * lambda_param**l_values) / factorial(l_values)
-
-    # 绘制对比图
-    plt.bar(unique, simulated_pmf, color='orange', alpha=0.7, label='Simulation')
-    plt.plot(l_values, theoretical_pmf, 'b-', marker='o', label='Theory')
-    plt.xlabel('l')
-    plt.ylabel('Probability')
-    plt.title('Simulation vs Theory')
+    # 进行实验模拟
+    results = simulate_coin_flips(n_experiments)
+    
+    # 计算理论分布
+    max_l = max(int(lambda_param * 2), max(results) + 1)
+    l_values = np.arange(max_l)
+    pmf = (lambda_param**l_values * np.exp(-lambda_param)) / factorial(l_values)
+    
+    # 绘制直方图和理论曲线
+    plt.figure(figsize=(12, 7))
+    plt.hist(results, bins=range(max_l+1), density=True, alpha=0.7, 
+            label='Simulation Results', color='skyblue')
+    plt.plot(l_values, pmf, 'r-', label='Theoretical Distribution', linewidth=2)
+    
+    plt.title(f'Poisson Distribution Comparison (N={n_experiments}, λ={lambda_param})')
+    plt.xlabel('Number of Heads')
+    plt.ylabel('Frequency/Probability')
+    plt.grid(True, alpha=0.3)
     plt.legend()
-    plt.grid(True)
-
+    
     # 打印统计信息
-    mean_simulated = np.mean(simulated_results)
-    var_simulated = np.var(simulated_results)
-    print(f"Simulated Mean: {mean_simulated}, Simulated Variance: {var_simulated}")
-    print(f"Theoretical Mean: {lambda_param}, Theoretical Variance: {lambda_param}")
+    print(f"实验均值: {np.mean(results):.2f} (理论值: {lambda_param})")
+    print(f"实验方差: {np.var(results):.2f} (理论值: {lambda_param})")
 
 if __name__ == "__main__":
     # 设置随机种子
