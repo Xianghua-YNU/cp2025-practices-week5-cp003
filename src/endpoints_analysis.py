@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import norm
 
+
 def random_walk_finals(num_steps, num_walks):
     """生成多个二维随机游走的终点位置"""
     # 初始化x和y坐标
@@ -28,9 +29,9 @@ def plot_endpoints_distribution(endpoints):
     plt.scatter(x_coords, y_coords, alpha=0.5, s=10, color='blue')
     plt.axhline(0, color='gray', linestyle='--', linewidth=1)
     plt.axvline(0, color='gray', linestyle='--', linewidth=1)
-    plt.xlabel("X 坐标")
-    plt.ylabel("Y 坐标")
-    plt.title("随机游走终点分布")
+    plt.xlabel("X")
+    plt.ylabel("Y")
+    plt.title("Random walk endpoint distribution")
     plt.axis("equal")
 
 def analyze_x_distribution(endpoints):
@@ -47,9 +48,9 @@ def analyze_x_distribution(endpoints):
     pdf = norm.pdf(x_vals, loc=mean_x, scale=np.sqrt(var_x))
     plt.plot(x_vals, pdf, 'r', linewidth=2)
     
-    plt.xlabel("X 坐标")
-    plt.ylabel("概率密度")
-    plt.title(f"X 坐标分布 (均值={mean_x:.2f}, 方差={var_x:.2f})")
+    plt.xlabel("X")
+    plt.ylabel("probability density")
+    plt.title(f"XCoordinate distribution (mean value={mean_x:.2f}, variance={var_x:.2f})")
     
     return mean_x, var_x
 
