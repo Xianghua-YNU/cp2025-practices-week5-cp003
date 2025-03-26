@@ -91,7 +91,7 @@ if __name__ == "__main__":
     print("=" * 50)
     print(f"拟合结果: k = {k:.4f}")
     print("理论值（2D随机游走）: k ≈ 1.0")
-    print("=" * 50)
+    
     
     # 绘制图形
     plt.figure(figsize=(8, 6))
