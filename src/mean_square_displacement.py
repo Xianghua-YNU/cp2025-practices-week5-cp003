@@ -86,7 +86,7 @@ if __name__ == "__main__":
     # 3. 设置图形属性
     # 4. 打印数据分析结果
    pass
-    '''
+    """
     steps, msd, k = analyze_step_dependence()
     
     # 打印拟合结果（确保控制台输出）
@@ -108,4 +108,4 @@ if __name__ == "__main__":
     
     # 显示图形
     plt.show()
-    '''
+    """
