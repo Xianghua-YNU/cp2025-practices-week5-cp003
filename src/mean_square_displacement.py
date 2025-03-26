@@ -85,4 +85,24 @@ if __name__ == "__main__":
     # 2. 绘制实验数据点和理论曲线
     # 3. 设置图形属性
     # 4. 打印数据分析结果
-    pass
+     steps, msd, k = analyze_step_dependence()
+    
+    # 打印拟合结果（确保控制台输出）
+    print("=" * 50)
+    print(f"拟合结果: k = {k:.4f}")
+    print("理论值（2D随机游走）: k ≈ 1.0")
+    print("=" * 50)
+    
+    # 绘制图形
+    plt.figure(figsize=(8, 6))
+    plt.scatter(steps, msd, color='b', label='模拟数据')
+    plt.plot(steps, k * steps, 'r-', label=f'拟合直线: MSD = {k:.2f} × N')
+    plt.xlabel("步数 (N)", fontsize=12)
+    plt.ylabel("均方位移 (MSD)", fontsize=12)
+    plt.title("随机游走: MSD 与步数的关系", fontsize=14)
+    plt.grid(True, linestyle='--', alpha=0.7)
+    plt.legend(fontsize=10)
+    plt.tight_layout()  # 防止标签被截断
+    
+    # 显示图形
+    plt.show()
