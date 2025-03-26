@@ -85,7 +85,7 @@ if __name__ == "__main__":
     # 2. 绘制实验数据点和理论曲线
     # 3. 设置图形属性
     # 4. 打印数据分析结果
-   pass
+    pass
     """
     steps, msd, k = analyze_step_dependence()
     
