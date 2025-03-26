@@ -9,12 +9,15 @@ def plot_poisson_pmf(lambda_param=8, max_l=20):
         lambda_param (float): 泊松分布参数λ
         max_l (int): 最大的l值
     """
-    # TODO: 实现泊松分布概率质量函数的计算和绘制
-    # 提示：
-    # 1. 使用np.arange生成l值序列
-    # 2. 使用给定公式计算PMF
-    # 3. 使用plt绘制图形并设置标签
-    pass
+    l_values = np.arange(0, max_l + 1)
+    pmf_values = (np.exp(-lambda_param) * lambda_param**l_values) / factorial(l_values)
+    
+    plt.bar(l_values, pmf_values, color='blue', alpha=0.7, label=f'λ={lambda_param}')
+    plt.xlabel('l')
+    plt.ylabel('P(l)')
+    plt.title('Poisson PMF')
+    plt.legend()
+    plt.grid(True)
 
 def simulate_coin_flips(n_experiments=10000, n_flips=100, p_head=0.08):
     """模拟多组抛硬币实验
@@ -27,11 +30,8 @@ def simulate_coin_flips(n_experiments=10000, n_flips=100, p_head=0.08):
     返回:
         ndarray: 每组实验中正面朝上的次数
     """
-    # TODO: 实现多组抛硬币实验
-    # 提示：
-    # 1. 使用np.random.choice模拟硬币抛掷
-    # 2. 统计每组实验中正面的次数
-    pass
+    results = np.random.binomial(n=n_flips, p=p_head, size=n_experiments)
+    return results
 
 def compare_simulation_theory(n_experiments=10000, lambda_param=8):
     """比较实验结果与理论分布
@@ -40,13 +40,30 @@ def compare_simulation_theory(n_experiments=10000, lambda_param=8):
         n_experiments (int): 实验组数
         lambda_param (float): 泊松分布参数λ
     """
-    # TODO: 实现实验结果与理论分布的对比
-    # 提示：
-    # 1. 调用simulate_coin_flips获取实验结果
-    # 2. 计算理论分布
-    # 3. 绘制直方图和理论曲线
-    # 4. 计算并打印统计信息
-    pass
+    # 实验结果
+    simulated_results = simulate_coin_flips(n_experiments=n_experiments, n_flips=100, p_head=lambda_param / 100)
+    unique, counts = np.unique(simulated_results, return_counts=True)
+    simulated_pmf = counts / n_experiments
+
+    # 理论分布
+    max_l = max(unique)
+    l_values = np.arange(0, max_l + 1)
+    theoretical_pmf = (np.exp(-lambda_param) * lambda_param**l_values) / factorial(l_values)
+
+    # 绘制对比图
+    plt.bar(unique, simulated_pmf, color='orange', alpha=0.7, label='Simulation')
+    plt.plot(l_values, theoretical_pmf, 'b-', marker='o', label='Theory')
+    plt.xlabel('l')
+    plt.ylabel('Probability')
+    plt.title('Simulation vs Theory')
+    plt.legend()
+    plt.grid(True)
+
+    # 打印统计信息
+    mean_simulated = np.mean(simulated_results)
+    var_simulated = np.var(simulated_results)
+    print(f"Simulated Mean: {mean_simulated}, Simulated Variance: {var_simulated}")
+    print(f"Theoretical Mean: {lambda_param}, Theoretical Variance: {lambda_param}")
 
 if __name__ == "__main__":
     # 设置随机种子
